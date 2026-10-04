@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Library Book Catalog</title>
+  <style>
+    body { font-family: Calibri, Arial, sans-serif; max-width: 980px; margin: 30px auto; padding: 0 12px; }
+    h1 { color: #0D3B5E; margin-bottom: 4px; }
+    .student { color: #1C7293; margin-top: 0; }
+    .stats { display: flex; gap: 12px; margin: 16px 0; }
+    .card { flex: 1; background: #f2f8fb; border-left: 5px solid #00B4D8; padding: 10px 14px; border-radius: 6px; }
+    .card b { display: block; font-size: 1.5em; color: #0D3B5E; }
+    form.add, form.search { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    input, select { padding: 6px; }
+    button { background: #1C7293; color: white; border: none; padding: 7px 14px; cursor: pointer; border-radius: 4px; }
+    button.danger { background: #b03a3a; }
+    button.ghost { background: #6b7c85; }
+    table { border-collapse: collapse; width: 100%; }
+    th { background: #0D3B5E; color: white; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    .ok { color: #1a7f37; font-weight: bold; }
+    .out { color: #b03a3a; font-weight: bold; }
+    .empty { text-align: center; color: #666; padding: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Library Book Catalog</h1>
+  <p class="student"><strong>Name:</strong> {{ student_name }} &nbsp;|&nbsp; <strong>Student ID:</strong> {{ student_id }}</p>
+
+  <div class="stats">
+    <div class="card"><b>{{ total }}</b>Total books</div>
+    <div class="card"><b>{{ available_count }}</b>Available</div>
+    <div class="card"><b>{{ borrowed_count }}</b>Borrowed</div>
+  </div>
+
+  <h3>Add a book</h3>
+  <form class="add" action="/add" method="post">
+    <input name="title" placeholder="Title" required>
+    <input name="author" placeholder="Author" required>
+    <input name="genre" placeholder="Genre" required>
+    <input name="year" type="number" placeholder="Year" required>
+    <button type="submit">Add Book</button>
+  </form>
+
+  <h3>Search</h3>
+  <form class="search" method="get" action="/">
+    <input name="q" value="{{ q }}" placeholder="Title, author or genre">
+    <select name="status">
+      <option value="all" {{ 'selected' if status == 'all' }}>All</option>
+      <option value="available" {{ 'selected' if status == 'available' }}>Available</option>
+      <option value="borrowed" {{ 'selected' if status == 'borrowed' }}>Borrowed</option>
+    </select>
+    <button type="submit">Search</button>
+    <a href="/"><button type="button" class="ghost">Reset</button></a>
+  </form>
+
+  <table>
+    <tr><th>ID</th><th>Title</th><th>Author</th><th>Genre</th><th>Year</th><th>Status</th><th>Actions</th></tr>
+    {% for b in books %}
+    <tr>
+      <td>{{ b.id }}</td>
+      <td>{{ b.title }}</td>
+      <td>{{ b.author }}</td>
+      <td>{{ b.genre }}</td>
+      <td>{{ b.year }}</td>
+      <td>{% if b.available %}<span class="ok">Available</span>{% else %}<span class="out">Borrowed</span>{% endif %}</td>
+      <td>
+        <form action="/toggle/{{ b.id }}" method="post" style="display:inline">
+          <button type="submit">{{ 'Borrow' if b.available else 'Return' }}</button>
+        </form>
+        <a href="/edit/{{ b.id }}"><button type="button" class="ghost">Edit</button></a>
+        <form action="/delete/{{ b.id }}" method="post" style="display:inline">
+          <button type="submit" class="danger">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="7" class="empty">No books found.</td></tr>
+    {% endfor %}
+  </table>
+</body>
+</html>

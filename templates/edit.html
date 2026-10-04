@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Edit Book</title></head>
+<body style="font-family: Calibri, Arial, sans-serif; max-width: 500px; margin: 30px auto;">
+  <h2 style="color:#0D3B5E;">Edit Book #{{ b.id }}</h2>
+  <p style="color:#1C7293;"><strong>Name:</strong> {{ student_name }} &nbsp;|&nbsp; <strong>Student ID:</strong> {{ student_id }}</p>
+  <form method="post">
+    <p><input name="title" value="{{ b.title }}" required style="width:100%;padding:6px;"></p>
+    <p><input name="author" value="{{ b.author }}" required style="width:100%;padding:6px;"></p>
+    <p><input name="genre" value="{{ b.genre }}" required style="width:100%;padding:6px;"></p>
+    <p><input name="year" type="number" value="{{ b.year }}" required style="width:100%;padding:6px;"></p>
+    <button type="submit" style="background:#1C7293;color:white;border:none;padding:7px 14px;">Save</button>
+    <a href="/">Cancel</a>
+  </form>
+</body>
+</html>
